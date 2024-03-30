@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://dlim3gn2cw2hx"]
+
+[ext_resource type="PackedScene" uid="uid://cij0vtyqahfdh" path="res://assets/prototype/characters/character_model/Mage.glb" id="1_dvilv"]
+[ext_resource type="Script" path="res://scripts/playerMovement.gd" id="2_g6auj"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kqsgq"]
+height = 1.87706
+
+[node name="Mage" instance=ExtResource("1_dvilv")]
+script = ExtResource("2_g6auj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.939029, 0)
+shape = SubResource("CapsuleShape3D_kqsgq")
+
+[node name="Spellbook" parent="Rig/Skeleton3D" index="0"]
+transform = Transform3D(0.999999, -4.69474e-07, -1.09847e-07, 4.76299e-07, 0.999999, -5.60721e-07, 3.9071e-08, 5.63844e-07, 0.999999, 0.883132, 1.04926, 0.265739)
+bone_idx = 9
+
+[node name="Spellbook_open" parent="Rig/Skeleton3D" index="1"]
+transform = Transform3D(0.999999, -4.69474e-07, -1.09847e-07, 4.76299e-07, 0.999999, -5.60721e-07, 3.9071e-08, 5.63844e-07, 0.999999, 0.883132, 1.04926, 0.145387)
+bone_idx = 10
+
+[node name="1H_Wand" parent="Rig/Skeleton3D" index="2"]
+transform = Transform3D(0.999999, 1.13574e-07, -5.12362e-07, -4.49339e-07, -7.39097e-07, -0.999999, 2.05328e-08, 1, -6.23305e-07, -0.883132, 1.04926, -4.40539e-07)
+bone_idx = 16
+
+[node name="2H_Staff" parent="Rig/Skeleton3D" index="3"]
+transform = Transform3D(0.999999, 1.13574e-07, -5.12362e-07, -4.49339e-07, -7.39097e-07, -0.999999, 2.05328e-08, 1, -6.23305e-07, -0.883132, 1.04926, -4.40539e-07)
+bone_idx = 17
+
+[node name="Mage_Hat" parent="Rig/Skeleton3D" index="4"]
+transform = Transform3D(1, -8.47033e-22, 8.47033e-22, 2.11758e-22, 0.965926, 0.258819, -8.47033e-22, -0.258819, 0.965926, 0, 1.7841, -1.02333e-07)
+bone_idx = 19
+
+[node name="Mage_Cape" parent="Rig/Skeleton3D" index="5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.21587, -1.02333e-07)
+bone_idx = 20
+
+[node name="camera_mount" type="Node3D" parent="." index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.12898, 0)
+
+[node name="Camera3D" type="Camera3D" parent="camera_mount" index="0"]
+transform = Transform3D(-0.999855, -0.0167568, -0.0030586, -0.0170277, 0.978532, 0.205392, -0.000448771, 0.205415, -0.978675, 0, 3.76958, -8.45417)

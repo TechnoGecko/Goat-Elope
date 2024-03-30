@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://dybm3l5h66voh"]
+
+[ext_resource type="MeshLibrary" uid="uid://cgowef3lsvx8b" path="res://lab_tileset.tres" id="1_yk0dr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tn55c"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_cbxti"]
+material = SubResource("StandardMaterial3D_tn55c")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_cbxti")
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("1_yk0dr")
+cell_center_y = false
+data = {
+"cells": PackedInt32Array(65532, 5, 1441792, 65532, 4, 1441792, 65532, 3, 1441792, 65532, 2, 1441792, 65532, 1, 1441792, 65532, 0, 1, 65531, 0, 0, 65530, 0, 0, 65529, 0, 1048577, 65529, 1, 1048576, 65529, 2, 1048576, 65529, 3, 1048576, 65529, 4, 1048576, 65529, 5, 1048576, 65530, 1, 1048578, 65531, 1, 1048578, 65531, 2, 1048578, 65530, 2, 1048578, 65530, 3, 1048578, 65531, 3, 1048578, 65530, 4, 1048578, 65531, 4, 1048578, 65530, 5, 1048578, 65531, 5, 1048578)
+}

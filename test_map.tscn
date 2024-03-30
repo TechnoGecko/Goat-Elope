@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://bq6f3p673umc2"]
+
+[ext_resource type="PackedScene" uid="uid://dlim3gn2cw2hx" path="res://mage.tscn" id="1_1ajbu"]
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_2oe5y"]
+turbidity = 9.9
+sun_disk_scale = 0.0
+ground_color = Color(0.12549, 0.0117647, 0.172549, 1)
+energy_multiplier = 15.71
+
+[sub_resource type="Sky" id="Sky_473nw"]
+sky_material = SubResource("PhysicalSkyMaterial_2oe5y")
+
+[sub_resource type="Environment" id="Environment_2sarl"]
+sky = SubResource("Sky_473nw")
+ambient_light_color = Color(0.423529, 0.0823529, 0.709804, 1)
+ambient_light_energy = 5.6
+reflected_light_source = 2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_um3hp"]
+size = Vector3(100, 0.5, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pi11e"]
+size = Vector3(100, 0.5, 100)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2sarl")
+
+[node name="map" type="Node3D" parent="."]
+
+[node name="Ground" type="StaticBody3D" parent="map"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="map/Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_um3hp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="map/Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.521852, 0)
+mesh = SubResource("BoxMesh_pi11e")
+
+[node name="Mage" parent="." instance=ExtResource("1_1ajbu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.146213, 0, -0.250601)
