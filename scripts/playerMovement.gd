@@ -1,3 +1,4 @@
+class_name PlayerController
 extends CharacterBody3D
 
 @onready var camera_mount = $camera_mount
@@ -19,7 +20,7 @@ extends CharacterBody3D
 
 @onready var jump_velocity: float = (2.0 * jump_height) / jump_time_to_peak
 @onready var jump_gravity: float = (-2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)
-@onready var variable_jump_gravity: float = (jump_velocity * jump_velocity) / (2 * variable_jump_height) 
+@onready var variable_jump_gravity: float = (jump_velocity * jump_velocity) / (-2.0 * variable_jump_height) 
 @onready var fall_gravity: float = (-2.0 * jump_height) / (jump_time_to_descent * jump_time_to_descent)
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -38,6 +39,12 @@ func _input(event):
 		rig.rotate_y(deg_to_rad(event.relative.x * sens_horizontal))
 		camera_mount.rotate_x(deg_to_rad(-event.relative.y * sens_vertical))
 
+func jump():
+	velocity.y = jump_velocity
+	if animation_player.current_animation != 'Jump_Start':
+		animation_player.play('Jump_Start')
+	is_jumping = true
+
 func playMovementAnimation():
 	if is_locked:
 		return
@@ -51,7 +58,13 @@ func playMovementAnimation():
 
 func play_in_air_animation():
 	if velocity.y > 0.0:
-		
+		if !animation_player.is_playing():
+			animation_player.play('Jump_Idle')
+
+func check_for_landing():
+	if is_on_floor():
+		is_jumping = false
+		animation_player.play('Jump_Land')
 
 func get_gravity():
 	if velocity.y > 0.0:
@@ -60,10 +73,13 @@ func get_gravity():
 		else:
 			return jump_gravity
 	else:
-		return fall_gravity
-	return jump_gravity if velocity.y > 0.0 else fall_gravity	
+		return fall_gravity	
 
 func _physics_process(delta): 
+	if !is_jumping:
+		check_for_landing()
+	else:
+		play_in_air_animation()
 	
 	if !animation_player.is_playing():
 		is_locked = false
@@ -88,16 +104,15 @@ func _physics_process(delta):
 
 	# Handle Jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		if animation_player.current_animation != 'Jump_Start':
-			animation_player.play('Jump_Start')
-		velocity.y = jump_velocity
+		jump()
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
-		playMovementAnimation()
+		if is_on_floor():
+			playMovementAnimation()
 		
 		if !is_locked:
 			rig.look_at(position + (-direction))
@@ -106,8 +121,12 @@ func _physics_process(delta):
 		velocity.z = direction.z * SPEED
 	else:
 		if !is_locked:
-			if animation_player.current_animation != 'Idle':
-				animation_player.play('Idle')
+			if is_on_floor():
+				if animation_player.current_animation != 'Idle':
+					animation_player.play('Idle')
+			else:
+				if animation_player.current_animation != 'Jump_Idle' && animation_player.current_animation != 'Jump_Start':
+					animation_player.play('Jump_Idle')
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 		

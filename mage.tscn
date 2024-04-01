@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dlim3gn2cw2hx"]
+[gd_scene load_steps=5 format=3 uid="uid://dlim3gn2cw2hx"]
 
 [ext_resource type="PackedScene" uid="uid://cij0vtyqahfdh" path="res://assets/prototype/characters/character_model/Mage.glb" id="1_dvilv"]
 [ext_resource type="Script" path="res://scripts/playerMovement.gd" id="2_g6auj"]
+[ext_resource type="Script" path="res://scripts/state_machine.gd" id="3_a07ox"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kqsgq"]
 height = 1.87706
@@ -15,7 +16,7 @@ running_speed = 14.0
 sens_horizontal = 0.275
 sens_vertical = 0.215
 jump_height = 2.0
-variable_jump_height = 5.5
+variable_jump_height = 3.5
 jump_time_to_peak = 0.4
 jump_time_to_descent = 0.2
 
@@ -83,3 +84,20 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.1
 
 [node name="Camera3D" type="Camera3D" parent="camera_mount" index="0"]
 transform = Transform3D(-1, -1.11204e-08, -8.81329e-08, -2.22409e-08, 0.991877, 0.127203, 8.60025e-08, 0.127203, -0.991877, -5.66046e-07, 4.3, -8.52519)
+
+[node name="state_machine" type="Node" parent="." index="4"]
+script = ExtResource("3_a07ox")
+
+[node name="idle" type="Node" parent="state_machine" index="0"]
+
+[node name="walk" type="Node" parent="state_machine" index="1"]
+
+[node name="run" type="Node" parent="state_machine" index="2"]
+
+[node name="attack" type="Node" parent="state_machine" index="3"]
+
+[node name="use_item" type="Node" parent="state_machine" index="4"]
+
+[node name="aim_spell" type="Node" parent="state_machine" index="5"]
+
+[node name="cast_spell" type="Node" parent="state_machine" index="6"]
