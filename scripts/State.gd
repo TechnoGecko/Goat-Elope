@@ -4,19 +4,20 @@ extends Node
 @export
 var animation_name: String
 
-@export
-var move_speed: float
-
 var parent: PlayerController
+var animation_player: AnimationPlayer
+var input: InputBrain
 
 var base_gravity: float = ProjectSettings.get_setting('physics/3d/default_gravity')
 
+func enter():
+	return null
+	
+func exit():
+	return null
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+func process_physics(delta):
+	return null
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func process():
+	return null
