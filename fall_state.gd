@@ -6,5 +6,3 @@ const LAND_ANIMATON = "Jump_Land"
 func enter():
 	animation_player.play(FALL_ANIMATION)
 	
-func enter():
-	animation_player.play(LAND_ANIMATION)

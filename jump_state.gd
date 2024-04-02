@@ -16,8 +16,7 @@ const LAND_ANIMATION = "Jump_Land"
 
 # Called when the node enters the scene tree for the first time.
 func enter():
-	if parent.is_on_floor():
-		jump()
+	jump()
 
 func exit():
 	animation_player.play(LAND_ANIMATION)
@@ -28,11 +27,11 @@ func jump():
 		animation_player.play(JUMP_START_ANIMATION)
 	parent.is_jumping = true
 	
-func jump_gravity():
+func get_jump_gravity():
 	if input.is_jump_pressed():
-			return variable_jump_gravity
-		else:
-			return jump_gravity
+		return variable_jump_gravity
+	else:
+		return jump_gravity
 
 func process_physics(delta):
-	parent.velocity.y += get_gravity() * delta
+	parent.velocity.y += parent.get_gravity() * delta

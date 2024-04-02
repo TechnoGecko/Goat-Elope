@@ -15,9 +15,13 @@ func enter():
 	
 func exit():
 	return null
+	
+func process_input(event: InputEvent):
+	return null
 
 func process_physics(delta):
 	return null
 
-func process():
+func process_frame(delta):
 	return null
+
