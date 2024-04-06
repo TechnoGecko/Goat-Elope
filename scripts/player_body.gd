@@ -48,6 +48,9 @@ func jump_just_pressed():
 		return true
 	return false
 		
+func jump(jump_velocity):
+	velocity.y = jump_velocity
+	
 func run_pressed():
 	if Input.is_action_pressed("run"):
 		return true
@@ -57,12 +60,6 @@ func attack_pressed():
 	if Input.is_action_pressed("attack"):
 		return true
 	return false
-
-func get_direction():
-	var input_dir = Input.get_vector("left", "right", "forward", "backward")
-	print('input_dir:')
-	print(input_dir)
-	return input_dir
 
 func rotate_body(event: InputEvent):
 	rotate_y(deg_to_rad(-event.relative.x * sens_horizontal))
@@ -86,48 +83,35 @@ func move_character(movement_speed):
 
 func _physics_process(delta): 
 	
-	print("I'm alive")
-	
 	if !animation_player.is_playing():
 		is_locked = false
 	
-	if is_on_floor():
-		if jump_pressed():
-			print('jump pressed')
-			state_machine.try_change_state(jump_state)
-		
-		if attack_pressed():
-			print('attack pressed')
-			state_machine.try_change_state(attack_state)
 	
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-		direction = get_direction()
-		if direction:
-			print('direction:')
-			print(get_direction())
-			
-			var input_dir = Input.get_vector("left", "right", "forward", "backward")
-			direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-			
-			if is_on_floor() and !is_locked:
+
+	var input_dir = Input.get_vector("left", "right", "forward", "backward")
+	direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
+	if is_on_floor():
+		if !is_locked:
+			if jump_pressed():
+				state_machine.try_change_state(jump_state)
+			if direction:
+				rig.look_at(position + (-direction))
 				if run_pressed():
 					state_machine.try_change_state(run_state)
 				else:
 					state_machine.try_change_state(walk_state)
-			
-			rig.look_at(position + (-direction))
-			
-			
-		else:
-			if is_on_floor():
-				if !is_locked:
-					state_machine.try_change_state(idle_state)
 			else:
-				if animation_player.current_animation != 'Jump_Idle' && animation_player.current_animation != 'Jump_Start':
-					animation_player.play('Jump_Idle')
-			velocity.x = move_toward(velocity.x, 0, SPEED)
-			velocity.z = move_toward(velocity.z, 0, SPEED)
-			
+				velocity.x = move_toward(velocity.x, 0, SPEED)
+				velocity.z = move_toward(velocity.z, 0, SPEED)
+				if !is_locked:
+					state_machine.try_change_state(idle_state)	
+	else:
+		state_machine.try_change_state(jump_state) 
+		
+
+		
+		
+		
 	if !is_locked:
 		move_and_slide()

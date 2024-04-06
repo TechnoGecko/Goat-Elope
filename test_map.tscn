@@ -51,7 +51,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.521852, 0)
 mesh = SubResource("BoxMesh_pi11e")
 
 [node name="Mage" parent="." instance=ExtResource("1_1ajbu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.146213, 0, -0.250601)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.146213, 5.29565, -1.53516)
 
 [node name="Floor" parent="." instance=ExtResource("2_a73rl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.79854, -0.25, 6.7483)

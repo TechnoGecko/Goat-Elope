@@ -23,11 +23,14 @@ func change_state(new_state: State):
 # Called when the node enters the scene tree for the first time.
 
 func try_change_state(new_state: State):
-	print('change state called')
-	print(new_state)
-	if current_state && current_state != new_state:
+	if current_state && current_state != new_state && current_state.locked == false:
+		print('state changed to:')
+		print(new_state)
 		prev_state = current_state
 		current_state = new_state
 
 func _process(delta):
 	current_state.process_frame(delta)
+	
+func _physics_process(delta):
+	current_state.process_physics(delta)
