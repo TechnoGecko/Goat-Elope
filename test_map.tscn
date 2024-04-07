@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://bdsfghupbeh2j" path="res://floor.tscn" id="2_a73rl"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ktxe0"]
-sky_top_color = Color(0.0666667, 0.0352941, 0.00392157, 1)
-sky_horizon_color = Color(0.566667, 0.551074, 0.53423, 1)
+sky_top_color = Color(0.454902, 0.290196, 0.690196, 1)
+sky_horizon_color = Color(0.172549, 0.0117647, 0.431373, 1)
 sky_energy_multiplier = 0.75
 ground_horizon_color = Color(0.566667, 0.551074, 0.53423, 1)
 
@@ -34,7 +34,7 @@ environment = SubResource("Environment_nssuj")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.871214, 0.381504, -0.308936, 0, 0.62932, 0.777146, 0.490904, 0.67706, -0.548273, 0, 74, -66)
-light_color = Color(0.533333, 0.0313726, 0.435294, 1)
+light_color = Color(0.454902, 0.290196, 0.690196, 1)
 light_energy = 1.5
 shadow_enabled = true
 

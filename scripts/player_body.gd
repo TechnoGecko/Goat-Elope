@@ -49,7 +49,12 @@ func jump_just_pressed():
 	return false
 		
 func jump(jump_velocity):
+	print('jump called')
 	velocity.y = jump_velocity
+	
+func is_grounded():
+	print('ground check')
+	return is_on_floor()
 	
 func run_pressed():
 	if Input.is_action_pressed("run"):
@@ -78,8 +83,8 @@ func check_for_landing():
 
 func move_character(movement_speed):
 	if allow_movement:
-				velocity.x = direction.x * SPEED
-				velocity.z = direction.z * SPEED
+				velocity.x = direction.x * movement_speed
+				velocity.z = direction.z * movement_speed
 
 func _physics_process(delta): 
 	
@@ -91,21 +96,24 @@ func _physics_process(delta):
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
 	direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
+	if !is_locked && direction:
+		rig.look_at(position + (-direction))
+	
 	if is_on_floor():
 		if !is_locked:
-			if jump_pressed():
+			if jump_just_pressed():
 				state_machine.try_change_state(jump_state)
-			if direction:
-				rig.look_at(position + (-direction))
-				if run_pressed():
-					state_machine.try_change_state(run_state)
-				else:
-					state_machine.try_change_state(walk_state)
+			elif direction:
+				if animation_player.current_animation != 'Jump_Land':
+					if run_pressed():
+						state_machine.try_change_state(run_state)
+					else:
+						state_machine.try_change_state(walk_state)
 			else:
 				velocity.x = move_toward(velocity.x, 0, SPEED)
 				velocity.z = move_toward(velocity.z, 0, SPEED)
-				if !is_locked:
-					state_machine.try_change_state(idle_state)	
+				
+				state_machine.try_change_state(idle_state)
 	else:
 		state_machine.try_change_state(jump_state) 
 		

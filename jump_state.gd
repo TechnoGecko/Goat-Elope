@@ -3,7 +3,7 @@ extends State
 const JUMP_START_ANIMATION = "Jump_Start"
 const JUMP_IDLE_ANIMATION = "Jump_Idle"
 const LAND_ANIMATION = "Jump_Land"
-var jumped = false
+var has_jumped = false
 
 @export var jump_height: float 
 @export var variable_jump_height: float
@@ -18,12 +18,16 @@ var jumped = false
 
 # Called when the node enters the scene tree for the first time.
 func enter():
-	if parent.is_on_floor():
+	print('jump entered')
+	if parent.is_grounded():
 		jump()
-	parent.animation_player.queue(JUMP_IDLE_ANIMATION)
+		parent.animation_player.play(JUMP_START_ANIMATION, -1, 3.0)
+		parent.animation_player.queue(JUMP_IDLE_ANIMATION)
+	else:
+		parent.animation_player.play(JUMP_IDLE_ANIMATION)
 
 func exit():
-	parent.animation_player.play(LAND_ANIMATION)
+	parent.animation_player.play(LAND_ANIMATION, -1, 2.5)
 
 func get_gravity():
 	if parent.velocity.y >= 0:
@@ -49,16 +53,16 @@ func get_jump_gravity():
 
 func process_physics(delta):
 	if parent.velocity.y > 0.0:
-		jumped = true
+		has_jumped = true
 	
-	if jumped && parent.is_on_floor():
+	if has_jumped && parent.is_on_floor():
 		locked = false
-		jumped = false
+		has_jumped = false
 	parent.velocity.y += get_gravity() * delta
 	
-	if parent.direction:
+	if parent.direction && !parent.is_grounded():
 		parent.move_character(in_air_movement_speed)
 
-func process_frame(delta):
-	if parent.animation_player.is_playing() == false && parent.is_on_floor():
+func process_frame(_delta):
+	if parent.animation_player.is_playing() == false && parent.is_grounded():
 		parent.animation_player.play(JUMP_IDLE_ANIMATION)

@@ -4,9 +4,14 @@ extends State
 
 const WALK_ANIMATION = 'Walking_A'
 
-func process_physics(delta):
+func enter():
+	if parent.animation_player.is_playing():
+		parent.animation_player.queue(WALK_ANIMATION)
+	else:
+		parent.animation_player.play(WALK_ANIMATION)
+func exit():
+	parent.animation_player.stop()
+
+func process_physics(_delta):
 	parent.move_character(walking_speed)
 
-func process_frame(delta):
-	if parent.animation_player.current_animation != WALK_ANIMATION:
-		parent.animation_player.play(WALK_ANIMATION)
