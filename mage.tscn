@@ -16,7 +16,6 @@ height = 1.87706
 
 [node name="Mage" node_paths=PackedStringArray("idle_state", "walk_state", "run_state", "jump_state", "fall_state", "attack_state") instance=ExtResource("1_dvilv")]
 script = ExtResource("2_ibjhc")
-JUMP_VELOCITY = 5.685
 sens_horizontal = 0.275
 sens_vertical = 0.215
 idle_state = NodePath("state_machine/idle")
@@ -62,20 +61,20 @@ bones/46/position = Vector3(-0.639244, 1.16225, 0.0597369)
 bones/46/rotation = Quaternion(-0.58593, 0.348826, 0.456309, 0.571654)
 
 [node name="Spellbook" parent="Rig/Skeleton3D" index="0"]
-transform = Transform3D(0.893399, 0.281454, 0.35017, -0.262062, 0.959574, -0.102665, -0.364911, -4.51221e-05, 0.931042, 0.842714, 1.05477, 0.30778)
+transform = Transform3D(0.893399, 0.281455, 0.350171, -0.262063, 0.959574, -0.102666, -0.364912, -4.49358e-05, 0.931041, 0.842715, 1.05477, 0.30778)
 visible = false
 bone_idx = 9
 
 [node name="Spellbook_open" parent="Rig/Skeleton3D" index="1"]
-transform = Transform3D(0.893399, 0.281454, 0.35017, -0.262062, 0.959574, -0.102665, -0.364911, -4.51221e-05, 0.931042, 0.800571, 1.06713, 0.195728)
+transform = Transform3D(0.893399, 0.281455, 0.350171, -0.262063, 0.959574, -0.102666, -0.364912, -4.49358e-05, 0.931041, 0.800571, 1.06713, 0.195728)
 bone_idx = 10
 
 [node name="1H_Wand" parent="Rig/Skeleton3D" index="2"]
-transform = Transform3D(0.930476, -0.340204, 0.135915, 0.103065, -0.112927, -0.988243, 0.351554, 0.933545, -0.0700125, -0.782266, 1.09301, 0.0628722)
+transform = Transform3D(0.930477, -0.340203, 0.135915, 0.103064, -0.112926, -0.988243, 0.351552, 0.933546, -0.0700124, -0.782266, 1.09301, 0.0628724)
 bone_idx = 16
 
 [node name="2H_Staff" parent="Rig/Skeleton3D" index="3"]
-transform = Transform3D(0.930476, -0.340204, 0.135915, 0.103065, -0.112927, -0.988243, 0.351554, 0.933545, -0.0700125, -0.782266, 1.09301, 0.0628722)
+transform = Transform3D(0.930477, -0.340203, 0.135915, 0.103064, -0.112926, -0.988243, 0.351552, 0.933546, -0.0700124, -0.782266, 1.09301, 0.0628724)
 bone_idx = 17
 
 [node name="Mage_Hat" parent="Rig/Skeleton3D" index="4"]
@@ -106,15 +105,20 @@ script = ExtResource("4_0inu8")
 
 [node name="walk" type="Node" parent="state_machine" index="1"]
 script = ExtResource("5_56k6s")
+walking_speed = 5.0
 
 [node name="run" type="Node" parent="state_machine" index="2"]
 script = ExtResource("6_4wnmf")
+running_speed = 9.5
 
 [node name="jump" type="Node" parent="state_machine" index="3"]
 script = ExtResource("7_iihep")
 jump_height = 2.0
+second_jump_height = 1.0
+second_jump_variable_height = 1.5
 variable_jump_height = 3.5
 jump_time_to_peak = 0.4
+double_jump_time_to_peak = 0.2
 jump_time_to_descent = 0.3
 
 [node name="fall" type="Node" parent="state_machine" index="4"]

@@ -15,4 +15,5 @@ func exit():
 
 func process_physics(delta):
 	parent.move_character(running_speed)
+	parent.momentum = running_speed
 	

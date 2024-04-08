@@ -7,8 +7,7 @@ extends CharacterBody3D
 @onready var state_machine = $state_machine
 @onready var input_brain = $InputBrain
 
-@export var JUMP_VELOCITY = 4.5
-@export var SPEED = 10
+@export var momentum_decay_rate: float = 0.1
 
 @export var sens_horizontal = 0.5
 @export var sens_vertical = 0.5
@@ -29,6 +28,7 @@ var allow_movement = true
 var is_jumping = false
 
 var direction
+var momentum = 0.0
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -37,6 +37,7 @@ func _ready():
 func _input(event):
 	if event is InputEventMouseMotion:
 		rotate_body(event)
+	state_machine.process_input(event)
 	
 func jump_pressed():
 	if Input.is_action_pressed("jump"):
@@ -49,11 +50,9 @@ func jump_just_pressed():
 	return false
 		
 func jump(jump_velocity):
-	print('jump called')
 	velocity.y = jump_velocity
 	
 func is_grounded():
-	print('ground check')
 	return is_on_floor()
 	
 func run_pressed():
@@ -83,8 +82,14 @@ func check_for_landing():
 
 func move_character(movement_speed):
 	if allow_movement:
-				velocity.x = direction.x * movement_speed
-				velocity.z = direction.z * movement_speed
+		velocity.x = direction.x * movement_speed
+		velocity.z = direction.z * movement_speed
+
+func decay_momentum():
+	if momentum > 0.1:
+		momentum = momentum * momentum_decay_rate
+	else:
+		momentum = 0.0
 
 func _physics_process(delta): 
 	
@@ -110,8 +115,6 @@ func _physics_process(delta):
 					else:
 						state_machine.try_change_state(walk_state)
 			else:
-				velocity.x = move_toward(velocity.x, 0, SPEED)
-				velocity.z = move_toward(velocity.z, 0, SPEED)
 				
 				state_machine.try_change_state(idle_state)
 	else:

@@ -63,8 +63,10 @@ cast_shadow = 0
 multimesh = SubResource("MultiMesh_wm0yr")
 
 [node name="GrassBase" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("PlaneMesh_2ikgg")
 
 [node name="stylized_grass" parent="." instance=ExtResource("2_65r0i")]
+visible = false
 
 [editable path="stylized_grass"]

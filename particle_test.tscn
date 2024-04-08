@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://dggblcnnlv4sv"]
+
+[sub_resource type="Gradient" id="Gradient_cwkbd"]
+colors = PackedColorArray(0.410661, 0.0575435, 0.606489, 1, 0.05, 0.0105, 0.0434167, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_waref"]
+gradient = SubResource("Gradient_cwkbd")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6mjo3"]
+particle_flag_disable_z = true
+initial_velocity_min = 8.33
+initial_velocity_max = 11.0
+angular_velocity_min = 109.37
+angular_velocity_max = 674.44
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+scale_min = 0.1
+scale_max = 0.6
+color = Color(1, 0.105882, 1, 1)
+color_ramp = SubResource("GradientTexture1D_waref")
+turbulence_noise_strength = 0.36
+turbulence_noise_scale = 2.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_py54i"]
+vertex_color_use_as_albedo = true
+
+[sub_resource type="PrismMesh" id="PrismMesh_gsx13"]
+material = SubResource("StandardMaterial3D_py54i")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+amount = 20
+preprocess = 1.0
+process_material = SubResource("ParticleProcessMaterial_6mjo3")
+draw_pass_1 = SubResource("PrismMesh_gsx13")
