@@ -1,0 +1,115 @@
+[gd_scene load_steps=11 format=3 uid="uid://dlim3gn2cw2hx"]
+
+[ext_resource type="PackedScene" uid="uid://cij0vtyqahfdh" path="res://assets/prototype/characters/character_model/Mage.glb" id="1_dvilv"]
+[ext_resource type="Script" path="res://scripts/player_body.gd" id="2_ibjhc"]
+[ext_resource type="Script" path="res://scripts/state_machine.gd" id="3_a07ox"]
+[ext_resource type="Script" path="res://idle_state.gd" id="4_0inu8"]
+[ext_resource type="Script" path="res://walk_state.gd" id="5_56k6s"]
+[ext_resource type="Script" path="res://run_state.gd" id="6_4wnmf"]
+[ext_resource type="Script" path="res://InputBrain.gd" id="6_8wqti"]
+[ext_resource type="Script" path="res://jump_state.gd" id="7_iihep"]
+[ext_resource type="Script" path="res://fall_state.gd" id="8_cwayc"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kqsgq"]
+height = 1.87706
+
+[node name="Mage" instance=ExtResource("1_dvilv")]
+script = ExtResource("2_ibjhc")
+JUMP_VELOCITY = 5.685
+sens_horizontal = 0.275
+sens_vertical = 0.215
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.939029, 0)
+shape = SubResource("CapsuleShape3D_kqsgq")
+
+[node name="Rig" parent="." index="1"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="Skeleton3D" parent="Rig" index="0"]
+bones/1/position = Vector3(0, 0.392064, 0)
+bones/1/rotation = Quaternion(-1.11123e-10, 0.0431578, 2.57241e-09, 0.999068)
+bones/2/rotation = Quaternion(-6.93889e-18, 7.10543e-15, 4.93038e-32, 1)
+bones/3/rotation = Quaternion(8.27181e-25, 3.72529e-09, 0, 1)
+bones/4/rotation = Quaternion(-0.559906, -0.0608803, -0.643974, 0.517779)
+bones/5/rotation = Quaternion(3.65498e-08, -4.88301e-08, -0.494719, 0.869053)
+bones/7/rotation = Quaternion(-0.321065, -0.325319, 0.145726, 0.87741)
+bones/11/rotation = Quaternion(-0.618244, 0.0807286, 0.618012, 0.478873)
+bones/12/rotation = Quaternion(2.09853e-08, 5.12855e-08, 0.517939, 0.855417)
+bones/14/rotation = Quaternion(-0.319291, 0.300524, -0.22735, 0.869512)
+bones/15/rotation = Quaternion(-1.02444e-09, -4.24391e-09, 0.707107, 0.707107)
+bones/18/rotation = Quaternion(-5.80608e-11, -0.0313417, -1.88012e-09, 0.999509)
+bones/21/rotation = Quaternion(0.996185, 0.0479136, 0.0566427, -0.045939)
+bones/22/rotation = Quaternion(0.165014, 6.49414e-08, -1.11407e-07, 0.986291)
+bones/23/rotation = Quaternion(-0.533729, -0.260895, -1.73018e-05, 0.804405)
+bones/25/rotation = Quaternion(0.997322, -0.0294574, 0.0315293, 0.0590483)
+bones/26/rotation = Quaternion(0.274008, -6.38135e-08, 1.92761e-07, 0.961727)
+bones/27/rotation = Quaternion(-0.559039, 0.114513, -0.00862764, 0.82115)
+bones/30/position = Vector3(0.213918, 0.0259903, 0.173866)
+bones/30/rotation = Quaternion(-0.705092, 0.0533355, 0.0533355, 0.705092)
+bones/31/rotation = Quaternion(9.65792e-09, 1.77955e-09, 0.985719, -0.168398)
+bones/32/rotation = Quaternion(-1.04035e-07, 0.391084, 0.920355, -2.9526e-08)
+bones/38/rotation = Quaternion(-5.83589e-09, 6.43837e-10, 0.994809, 0.101756)
+bones/39/rotation = Quaternion(-1.04035e-07, 0.391084, 0.920355, -2.95261e-08)
+bones/44/position = Vector3(0.520841, 0.788312, -0.0576373)
+bones/44/rotation = Quaternion(0.794627, -9.80973e-08, 0.607098, -8.14761e-08)
+bones/46/position = Vector3(-0.510844, 0.788312, 0.0597369)
+bones/46/rotation = Quaternion(-0.758253, -2.06327e-07, 0.651961, -2.6433e-08)
+
+[node name="Spellbook" parent="Rig/Skeleton3D" index="0"]
+transform = Transform3D(3.35325e-07, 0.964832, 0.262865, -0.999999, 8.80984e-07, -4.14425e-07, -8.45811e-07, -0.262865, 0.964832, 0.577622, 0.636705, 0.237873)
+visible = false
+bone_idx = 9
+
+[node name="Spellbook_open" parent="Rig/Skeleton3D" index="1"]
+transform = Transform3D(3.35325e-07, 0.964832, 0.262865, -0.999999, 8.80984e-07, -4.14425e-07, -8.45811e-07, -0.262865, 0.964832, 0.545986, 0.636705, 0.121754)
+bone_idx = 10
+
+[node name="1H_Wand" parent="Rig/Skeleton3D" index="2"]
+transform = Transform3D(2.88042e-07, -0.149894, 0.988701, 0.999999, -1.09988e-06, -7.7486e-07, 1.46941e-06, 0.988701, 0.149894, -0.491061, 0.64103, 0.106596)
+bone_idx = 16
+
+[node name="2H_Staff" parent="Rig/Skeleton3D" index="3"]
+transform = Transform3D(2.88042e-07, -0.149894, 0.988701, 0.999999, -1.09988e-06, -7.7486e-07, 1.46941e-06, 0.988701, 0.149894, -0.491061, 0.64103, 0.106596)
+bone_idx = 17
+
+[node name="Mage_Hat" parent="Rig/Skeleton3D" index="4"]
+transform = Transform3D(0.99972, -0.00612025, 0.0228411, 1.39343e-09, 0.965926, 0.258819, -0.0236468, -0.258747, 0.965656, -7.48423e-09, 1.7705, -1.02479e-07)
+bone_idx = 19
+
+[node name="Mage_Cape" parent="Rig/Skeleton3D" index="5"]
+transform = Transform3D(0.996275, -5.14962e-09, 0.0862354, 5.13044e-09, 1, 4.44078e-10, -0.0862354, 1.46374e-15, 0.996275, -1.2997e-08, 1.20227, -1.01951e-07)
+bone_idx = 20
+
+[node name="AnimationPlayer" parent="." index="2"]
+playback_default_blend_time = 0.2
+
+[node name="camera_mount" type="Node3D" parent="." index="3"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.12898, 0)
+
+[node name="Camera3D" type="Camera3D" parent="camera_mount" index="0"]
+transform = Transform3D(-1, -1.11204e-08, -8.81329e-08, -2.22409e-08, 0.991877, 0.127203, 8.60025e-08, 0.127203, -0.991877, -5.66046e-07, 4.3, -8.52519)
+
+[node name="state_machine" type="Node" parent="." index="4" node_paths=PackedStringArray("starting_state")]
+script = ExtResource("3_a07ox")
+starting_state = NodePath("idle")
+
+[node name="idle" type="Node" parent="state_machine" index="0"]
+script = ExtResource("4_0inu8")
+
+[node name="walk" type="Node" parent="state_machine" index="1"]
+script = ExtResource("5_56k6s")
+
+[node name="run" type="Node" parent="state_machine" index="2"]
+script = ExtResource("6_4wnmf")
+
+[node name="jump" type="Node" parent="state_machine" index="3"]
+script = ExtResource("7_iihep")
+
+[node name="fall" type="Node" parent="state_machine" index="4"]
+script = ExtResource("8_cwayc")
+
+[node name="Node" type="Node" parent="." index="5"]
+
+[node name="InputBrain" type="Node" parent="." index="6"]
+script = ExtResource("6_8wqti")
