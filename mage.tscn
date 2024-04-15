@@ -18,6 +18,8 @@ height = 1.87706
 script = ExtResource("2_ibjhc")
 sens_horizontal = 0.275
 sens_vertical = 0.215
+joystick_sens_horizontal = 2.0
+joystick_sens_vertical = 2.0
 idle_state = NodePath("state_machine/idle")
 walk_state = NodePath("state_machine/walk")
 run_state = NodePath("state_machine/run")
@@ -91,7 +93,7 @@ playback_default_blend_time = 0.2
 [node name="Node3D" type="Node3D" parent="AnimationPlayer" index="0"]
 
 [node name="camera_mount" type="Node3D" parent="." index="3"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.12898, 0)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 1.12898, 0)
 
 [node name="Camera3D" type="Camera3D" parent="camera_mount" index="0"]
 transform = Transform3D(-1, -1.11204e-08, -8.81329e-08, -2.22409e-08, 0.991877, 0.127203, 8.60025e-08, 0.127203, -0.991877, -5.66046e-07, 4.3, -8.52519)
@@ -102,6 +104,7 @@ starting_state = NodePath("idle")
 
 [node name="idle" type="Node" parent="state_machine" index="0"]
 script = ExtResource("4_0inu8")
+stopping_rate = 1.5
 
 [node name="walk" type="Node" parent="state_machine" index="1"]
 script = ExtResource("5_56k6s")

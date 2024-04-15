@@ -11,6 +11,10 @@ extends CharacterBody3D
 
 @export var sens_horizontal = 0.5
 @export var sens_vertical = 0.5
+@export var joystick_sens_horizontal = 0.5
+@export var joystick_sens_vertical = 0.5
+@export var max_camera_angle = 45.0
+@export var min_camera_angle = -33.0
 
 @export var idle_state: State
 @export var walk_state: State
@@ -28,6 +32,8 @@ var allow_movement = true
 var is_jumping = false
 
 var direction
+var right_stick_direction
+var override_right_stick = false
 var momentum = 0.0
 
 func _ready():
@@ -37,6 +43,7 @@ func _ready():
 func _input(event):
 	if event is InputEventMouseMotion:
 		rotate_body(event)
+		
 	state_machine.process_input(event)
 	
 func jump_pressed():
@@ -68,8 +75,21 @@ func attack_pressed():
 func rotate_body(event: InputEvent):
 	rotate_y(deg_to_rad(-event.relative.x * sens_horizontal))
 	rig.rotate_y(deg_to_rad(event.relative.x * sens_horizontal))
+	print('rotating rig:')
+	print(deg_to_rad(event.relative.x * sens_horizontal))
+	print('rotating camera:')
+	print(deg_to_rad(-event.relative.y * sens_vertical))
 	camera_mount.rotate_x(deg_to_rad(-event.relative.y * sens_vertical))
 
+func rotate_body_joystick(input_direction):
+	rotate_y(deg_to_rad(-input_direction.x * joystick_sens_horizontal))
+	rig.rotate_y(deg_to_rad(input_direction.x * joystick_sens_horizontal))
+	if input_direction.y < 0 && camera_mount.transform.basis.get_rotation_quaternion()[2] > -0.45:
+		camera_mount.rotate_x( deg_to_rad(input_direction.y * joystick_sens_vertical))
+	elif input_direction.y > 0 && camera_mount.transform.basis.get_rotation_quaternion()[2] < 0.33:
+		camera_mount.rotate_x( deg_to_rad(input_direction.y * joystick_sens_vertical))
+		
+	
 func play_in_air_animation():
 	if velocity.y > 0.0:
 		if !animation_player.is_playing():
@@ -91,6 +111,14 @@ func decay_momentum():
 	else:
 		momentum = 0.0
 
+func _process(delta):
+	var input_dir_right = Input.get_vector("right_stick_left", "right_stick_right", "right_stick_up", "right_stick_down")
+	right_stick_direction =  Vector3(input_dir_right.x, input_dir_right.y, 0).normalized()
+	
+	if right_stick_direction:
+		rotate_body_joystick(right_stick_direction)
+	
+
 func _physics_process(delta): 
 	
 	if !animation_player.is_playing():
@@ -100,6 +128,9 @@ func _physics_process(delta):
 
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
 	direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
+	
+	
 	
 	if !is_locked && direction:
 		rig.look_at(position + (-direction))
