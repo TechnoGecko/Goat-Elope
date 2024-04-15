@@ -14,4 +14,4 @@ func exit():
 func process_physics(delta):
 	parent.velocity.x = move_toward(parent.velocity.x, 0, stopping_rate)
 	parent.velocity.z = move_toward(parent.velocity.z, 0, stopping_rate)
-				
+	

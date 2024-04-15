@@ -21,11 +21,12 @@ color_ramp = SubResource("GradientTexture1D_waref")
 turbulence_noise_strength = 0.36
 turbulence_noise_scale = 2.85
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_py54i"]
-vertex_color_use_as_albedo = true
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nxgwf"]
+albedo_color = Color(0.909804, 0.737255, 0.756863, 1)
 
-[sub_resource type="PrismMesh" id="PrismMesh_gsx13"]
-material = SubResource("StandardMaterial3D_py54i")
+[sub_resource type="SphereMesh" id="SphereMesh_uhb7r"]
+material = SubResource("StandardMaterial3D_nxgwf")
+rings = 8
 
 [node name="Node3D" type="Node3D"]
 
@@ -33,4 +34,4 @@ material = SubResource("StandardMaterial3D_py54i")
 amount = 20
 preprocess = 1.0
 process_material = SubResource("ParticleProcessMaterial_6mjo3")
-draw_pass_1 = SubResource("PrismMesh_gsx13")
+draw_pass_1 = SubResource("SphereMesh_uhb7r")
