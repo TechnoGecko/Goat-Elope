@@ -83,12 +83,27 @@ func rotate_body(event: InputEvent):
 func rotate_body_joystick(input_direction):
 	rotate_y(deg_to_rad(-input_direction.x * joystick_sens_horizontal))
 	rig.rotate_y(deg_to_rad(input_direction.x * joystick_sens_horizontal))
-	if input_direction.y < 0 && camera_mount.transform.basis.get_rotation_quaternion()[2] > -0.45:
+	print('transform basis direction:')
+	print(transform.basis)
+	print('input direction:')
+	print(input_direction)
+	print('camera direction:')
+	print(camera_mount.transform.basis.get_rotation_quaternion())
+	if input_direction.y > 0 && camera_mount.transform.basis.get_rotation_quaternion()[2] > -0.45:
 		camera_mount.rotate_x( deg_to_rad(-input_direction.y * joystick_sens_vertical))
-	elif input_direction.y > 0 && camera_mount.transform.basis.get_rotation_quaternion()[2] < 0.33:
+	elif input_direction.y < 0 && camera_mount.transform.basis.get_rotation_quaternion()[2] < 0.33:
 		camera_mount.rotate_x( deg_to_rad(-input_direction.y * joystick_sens_vertical))
 		
+
+func reset_camera_rotation():
+	print('rotation:', rotation, 'set to:', rig.rotation)
+	var diff = rotation - rig.rotation
+	rotation = rig.rotation
+	rig.rotation += diff
+	print('resulting rotation:', rotation, 'rig rotation:', rig.rotation)
 	
+	
+
 func play_in_air_animation():
 	if velocity.y > 0.0:
 		if !animation_player.is_playing():
@@ -114,10 +129,11 @@ func _process(delta):
 	var input_dir_right = Input.get_vector("right_stick_left", "right_stick_right", "right_stick_up", "right_stick_down")
 	right_stick_direction =  Vector3(input_dir_right.x, input_dir_right.y, 0)
 	
+	if Input.is_action_just_pressed('reset_camera'):
+		reset_camera_rotation()
+	
 	if right_stick_direction && !override_right_stick:
 		rotate_body_joystick(right_stick_direction)
-		print('right stick direction:')
-		print(right_stick_direction)
 	
 	if !animation_player.is_playing():
 		is_locked = false
