@@ -18,6 +18,8 @@ extends CharacterBody3D
 @onready var cam_yaw = $camera_mount/CamYaw
 @onready var cam_pitch = $camera_mount/CamYaw/CamPitch
 @onready var player_camera = $camera_mount/CamYaw/CamPitch/Camera3D
+var camera_was_reset = false
+var prev_cam_yaw_basis
 
 
 
@@ -101,35 +103,17 @@ func rotate_body_joystick(input_direction):
 	
 	print('camera pitch degrees:')
 	print(cam_pitch.rotation_degrees)
-	if input_direction.y < 0 && cam_pitch.rotation_degrees.x < max_camera_angle:
-		cam_pitch.rotate_x( deg_to_rad(-input_direction.y * joystick_sens_vertical))
-	elif input_direction.y > 0 && cam_pitch.rotation_degrees.x > min_camera_angle:
-		cam_pitch.rotate_x( deg_to_rad(-input_direction.y * joystick_sens_vertical))
+	if input_direction.y > 0 && cam_pitch.rotation_degrees.x < max_camera_angle:
+		cam_pitch.rotate_x( deg_to_rad(input_direction.y * joystick_sens_vertical))
+	elif input_direction.y < 0 && cam_pitch.rotation_degrees.x > min_camera_angle:
+		cam_pitch.rotate_x( deg_to_rad(input_direction.y * joystick_sens_vertical))
 	
 	cam_yaw.rotate_y(deg_to_rad(-input_direction.x * joystick_sens_horizontal))
 
 func reset_camera_rotation():
-	#var diff = (global_rotation_degrees.y - (rig.global_rotation_degrees.y + 180) / 2)
-	#print('diff: ', diff)
-	# ----------------------
-	#var dir = rig.global_rotation_degrees.y - 180
-	#rotation_degrees.y = dir
-	#var diff = rig.rotation_degrees.y - dir
-	#print('rig.rotation_degrees - camera dir: ', diff) 
-	#rig.rotate_y(deg_to_rad(-180))
-	# ----------------------
-	look_at(position - rig.transform.basis.z)
-	rig.look_at(position + transform.basis.z)
-	var camera_basis = transform.basis
-	var body_basis = rig.transform.basis
-	var diff = camera_basis.y - body_basis.y;
-	print('camera.y:')
-	print(camera_basis)
-	print('rig .y:')
-	print(body_basis)
-	print('diff: ', diff)
-	
-	#print('resulting rotation:', rotation_degrees, 'rig rotation:', rig.rotation_degrees)
+	prev_cam_yaw_basis = cam_yaw.transform.basis
+	cam_yaw.rotation_degrees.y = rig.rotation_degrees.y - 180
+	camera_was_reset = true
 	
 	
 
@@ -168,7 +152,11 @@ func _process(delta):
 		is_locked = false
 	
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
-	direction = (cam_yaw.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
+	if(!camera_was_reset):
+		direction = (cam_yaw.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	else:
+		direction = (prev_cam_yaw_basis)
 	
 	if !is_locked && direction:
 		rig.look_at(position + (-direction))

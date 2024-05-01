@@ -102,12 +102,13 @@ transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 1.1
 [node name="CamPitch" type="Node3D" parent="camera_mount/CamYaw" index="0"]
 
 [node name="SpringArm3D" type="SpringArm3D" parent="camera_mount/CamYaw/CamPitch" index="0"]
-transform = Transform3D(-1, 6.245e-16, -8.74228e-08, 4.66294e-15, 1, 0, 8.74228e-08, -5.45956e-23, -1, 1.49642e-09, 1.1316, 0.017117)
+transform = Transform3D(-1, 6.245e-16, -8.74228e-08, 4.66294e-15, 1, 0, 8.74228e-08, -5.45956e-23, -1, -1.00218e-07, 1.1316, -1.14635)
 shape = SubResource("SphereShape3D_gxbm1")
 spring_length = 11.0
+margin = 0.77
 
 [node name="Camera3D" type="Camera3D" parent="camera_mount/CamYaw/CamPitch/SpringArm3D" index="0"]
-transform = Transform3D(1, 2.22409e-08, 1.42035e-09, -2.22409e-08, 0.991877, 0.127203, 1.4203e-09, -0.127203, 0.991877, -1.7925e-07, 0.428982, 8.52519)
+transform = Transform3D(1, 2.22409e-08, 1.42035e-09, -2.22409e-08, 0.991877, 0.127203, 1.4203e-09, -0.127203, 0.991877, -1.7925e-07, 0.428982, 7.77644)
 
 [node name="state_machine" type="Node" parent="." index="4" node_paths=PackedStringArray("starting_state")]
 script = ExtResource("3_a07ox")
