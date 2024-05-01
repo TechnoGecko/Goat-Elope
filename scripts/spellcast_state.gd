@@ -1,5 +1,9 @@
 extends State
+var selected_spell: Spell
 
+
+func enter():
+	selected_spell = parent.selected_spell
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

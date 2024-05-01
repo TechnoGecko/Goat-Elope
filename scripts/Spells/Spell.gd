@@ -1,11 +1,9 @@
+class_name Spell
 extends Node
 
 var parent
 
 var casting_complete = false
-
-func init(parent: PlayerController):
-	this.parent = parent
 
 func input_rules(_direction):
 	return null

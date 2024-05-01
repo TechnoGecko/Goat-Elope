@@ -13,8 +13,13 @@ extends CharacterBody3D
 @export var sens_vertical = 0.5
 @export var joystick_sens_horizontal = 0.5
 @export var joystick_sens_vertical = 0.5
-@export var max_camera_angle = 45.0
+@export var max_camera_angle = 50.0
 @export var min_camera_angle = -33.0
+@onready var cam_yaw = $camera_mount/CamYaw
+@onready var cam_pitch = $camera_mount/CamYaw/CamPitch
+@onready var player_camera = $camera_mount/CamYaw/CamPitch/Camera3D
+
+
 
 @export var idle_state: State
 @export var walk_state: State
@@ -25,6 +30,7 @@ extends CharacterBody3D
 @export var spellcast_state: State
 @export var spell_select_state: State
 
+var selected_spell: Spell
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -76,31 +82,54 @@ func attack_pressed():
 	return false
 
 func rotate_body(event: InputEvent):
-	rotate_y(deg_to_rad(-event.relative.x * sens_horizontal))
-	rig.rotate_y(deg_to_rad(event.relative.x * sens_horizontal))
-	camera_mount.rotate_x(deg_to_rad(-event.relative.y * sens_vertical))
+	cam_yaw.rotate_y(deg_to_rad(-event.relative.x * sens_horizontal))
+	#rig.rotate_y(deg_to_rad(event.relative.x * sens_horizontal))
+	cam_pitch.rotate_x(deg_to_rad(-event.relative.y * sens_vertical))
 
 func rotate_body_joystick(input_direction):
-	rotate_y(deg_to_rad(-input_direction.x * joystick_sens_horizontal))
-	rig.rotate_y(deg_to_rad(input_direction.x * joystick_sens_horizontal))
-	print('transform basis direction:')
-	print(transform.basis)
-	print('input direction:')
-	print(input_direction)
-	print('camera direction:')
-	print(camera_mount.transform.basis.get_rotation_quaternion())
-	if input_direction.y > 0 && camera_mount.transform.basis.get_rotation_quaternion()[2] > -0.45:
-		camera_mount.rotate_x( deg_to_rad(-input_direction.y * joystick_sens_vertical))
-	elif input_direction.y < 0 && camera_mount.transform.basis.get_rotation_quaternion()[2] < 0.33:
-		camera_mount.rotate_x( deg_to_rad(-input_direction.y * joystick_sens_vertical))
-		
+	
+	# -----
+	#var camera_basis = transform.basis
+	#var body_basis = rig.transform.basis
+	#var diff = camera_basis.y - body_basis.y;
+	#print('camera.y:')
+	#print(camera_basis)
+	#print('rig .y:')
+	#print(body_basis)
+	#print('diff: ', diff)
+	# -----
+	
+	print('camera pitch degrees:')
+	print(cam_pitch.rotation_degrees)
+	if input_direction.y < 0 && cam_pitch.rotation_degrees.x < max_camera_angle:
+		cam_pitch.rotate_x( deg_to_rad(-input_direction.y * joystick_sens_vertical))
+	elif input_direction.y > 0 && cam_pitch.rotation_degrees.x > min_camera_angle:
+		cam_pitch.rotate_x( deg_to_rad(-input_direction.y * joystick_sens_vertical))
+	
+	cam_yaw.rotate_y(deg_to_rad(-input_direction.x * joystick_sens_horizontal))
 
 func reset_camera_rotation():
-	print('rotation:', rotation, 'set to:', rig.rotation)
-	var diff = rotation - rig.rotation
-	rotation = rig.rotation
-	rig.rotation += diff
-	print('resulting rotation:', rotation, 'rig rotation:', rig.rotation)
+	#var diff = (global_rotation_degrees.y - (rig.global_rotation_degrees.y + 180) / 2)
+	#print('diff: ', diff)
+	# ----------------------
+	#var dir = rig.global_rotation_degrees.y - 180
+	#rotation_degrees.y = dir
+	#var diff = rig.rotation_degrees.y - dir
+	#print('rig.rotation_degrees - camera dir: ', diff) 
+	#rig.rotate_y(deg_to_rad(-180))
+	# ----------------------
+	look_at(position - rig.transform.basis.z)
+	rig.look_at(position + transform.basis.z)
+	var camera_basis = transform.basis
+	var body_basis = rig.transform.basis
+	var diff = camera_basis.y - body_basis.y;
+	print('camera.y:')
+	print(camera_basis)
+	print('rig .y:')
+	print(body_basis)
+	print('diff: ', diff)
+	
+	#print('resulting rotation:', rotation_degrees, 'rig rotation:', rig.rotation_degrees)
 	
 	
 
@@ -139,7 +168,7 @@ func _process(delta):
 		is_locked = false
 	
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
-	direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	direction = (cam_yaw.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	if !is_locked && direction:
 		rig.look_at(position + (-direction))

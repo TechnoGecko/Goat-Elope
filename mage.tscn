@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dlim3gn2cw2hx"]
+[gd_scene load_steps=13 format=3 uid="uid://dlim3gn2cw2hx"]
 
 [ext_resource type="PackedScene" uid="uid://cij0vtyqahfdh" path="res://assets/prototype/characters/character_model/Mage.glb" id="1_dvilv"]
 [ext_resource type="Script" path="res://scripts/player_body.gd" id="2_ibjhc"]
@@ -13,6 +13,8 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kqsgq"]
 height = 1.87706
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_gxbm1"]
 
 [node name="Mage" node_paths=PackedStringArray("idle_state", "walk_state", "run_state", "jump_state", "fall_state", "attack_state") instance=ExtResource("1_dvilv")]
 script = ExtResource("2_ibjhc")
@@ -95,8 +97,17 @@ playback_default_blend_time = 0.2
 [node name="camera_mount" type="Node3D" parent="." index="3"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 1.12898, 0)
 
-[node name="Camera3D" type="Camera3D" parent="camera_mount" index="0"]
-transform = Transform3D(-1, -1.11204e-08, -8.81329e-08, -2.22409e-08, 0.991877, 0.127203, 8.60025e-08, 0.127203, -0.991877, -5.66046e-07, 4.3, -8.52519)
+[node name="CamYaw" type="Node3D" parent="camera_mount" index="0"]
+
+[node name="CamPitch" type="Node3D" parent="camera_mount/CamYaw" index="0"]
+
+[node name="SpringArm3D" type="SpringArm3D" parent="camera_mount/CamYaw/CamPitch" index="0"]
+transform = Transform3D(-1, 6.245e-16, -8.74228e-08, 4.66294e-15, 1, 0, 8.74228e-08, -5.45956e-23, -1, 1.49642e-09, 1.1316, 0.017117)
+shape = SubResource("SphereShape3D_gxbm1")
+spring_length = 11.0
+
+[node name="Camera3D" type="Camera3D" parent="camera_mount/CamYaw/CamPitch/SpringArm3D" index="0"]
+transform = Transform3D(1, 2.22409e-08, 1.42035e-09, -2.22409e-08, 0.991877, 0.127203, 1.4203e-09, -0.127203, 0.991877, -1.7925e-07, 0.428982, 8.52519)
 
 [node name="state_machine" type="Node" parent="." index="4" node_paths=PackedStringArray("starting_state")]
 script = ExtResource("3_a07ox")
