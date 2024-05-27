@@ -22,6 +22,7 @@ sens_horizontal = 0.275
 sens_vertical = 0.215
 joystick_sens_horizontal = 0.9
 joystick_sens_vertical = 0.9
+camera_rotation_speed = 7.5
 idle_state = NodePath("state_machine/idle")
 walk_state = NodePath("state_machine/walk")
 run_state = NodePath("state_machine/run")

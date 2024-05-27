@@ -15,10 +15,16 @@ extends CharacterBody3D
 @export var joystick_sens_vertical = 0.5
 @export var max_camera_angle = 50.0
 @export var min_camera_angle = -33.0
+@export var camera_rotation_speed = .5
 @onready var cam_yaw = $camera_mount/CamYaw
 @onready var cam_pitch = $camera_mount/CamYaw/CamPitch
 @onready var player_camera = $camera_mount/CamYaw/CamPitch/Camera3D
 var camera_was_reset = false
+var camera_reset_initiated = false
+var camera_rotation_weight = 0.0
+var initial_camera_yaw
+var target_camera_direction
+var input_direction_on_camera_reset
 var prev_cam_yaw_basis
 
 
@@ -89,34 +95,13 @@ func rotate_body(event: InputEvent):
 	cam_pitch.rotate_x(deg_to_rad(-event.relative.y * sens_vertical))
 
 func rotate_body_joystick(input_direction):
-	
-	# -----
-	#var camera_basis = transform.basis
-	#var body_basis = rig.transform.basis
-	#var diff = camera_basis.y - body_basis.y;
-	#print('camera.y:')
-	#print(camera_basis)
-	#print('rig .y:')
-	#print(body_basis)
-	#print('diff: ', diff)
-	# -----
-	
-	print('camera pitch degrees:')
-	print(cam_pitch.rotation_degrees)
 	if input_direction.y > 0 && cam_pitch.rotation_degrees.x < max_camera_angle:
 		cam_pitch.rotate_x( deg_to_rad(input_direction.y * joystick_sens_vertical))
 	elif input_direction.y < 0 && cam_pitch.rotation_degrees.x > min_camera_angle:
 		cam_pitch.rotate_x( deg_to_rad(input_direction.y * joystick_sens_vertical))
 	
 	cam_yaw.rotate_y(deg_to_rad(-input_direction.x * joystick_sens_horizontal))
-
-func reset_camera_rotation():
-	prev_cam_yaw_basis = cam_yaw.transform.basis
-	cam_yaw.rotation_degrees.y = rig.rotation_degrees.y - 180
-	camera_was_reset = true
 	
-	
-
 func play_in_air_animation():
 	if velocity.y > 0.0:
 		if !animation_player.is_playing():
@@ -143,8 +128,25 @@ func _process(delta):
 	right_stick_direction =  Vector3(input_dir_right.x, input_dir_right.y, 0)
 	
 	if Input.is_action_just_pressed('reset_camera'):
-		reset_camera_rotation()
-	
+		target_camera_direction = rig.rotation_degrees.y - 180
+		camera_reset_initiated = true
+		initial_camera_yaw = cam_yaw.rotation_degrees.y
+		prev_cam_yaw_basis = cam_yaw.transform.basis
+		
+	if camera_reset_initiated:
+		if Input.is_action_pressed('reset_camera'):
+			target_camera_direction = rig.rotation_degrees.y - 180
+		print('lerping camera with weight', delta * camera_rotation_speed)
+		var prev = cam_yaw.rotation_degrees.y
+		cam_yaw.rotation_degrees.y = rad_to_deg(lerp_angle(cam_yaw.rotation.y, deg_to_rad(target_camera_direction), delta * camera_rotation_speed))
+		if(cam_yaw.rotation_degrees.y < prev + 1 && cam_yaw.rotation_degrees.y > prev - 1 && !Input.is_action_pressed('reset_camera')):
+			print('detected reset completion:')
+			camera_reset_initiated = false
+			cam_yaw.rotation_degrees.y = rig.rotation_degrees.y - 180
+			if direction:
+				camera_was_reset = true
+				input_direction_on_camera_reset = direction
+		
 	if right_stick_direction && !override_right_stick:
 		rotate_body_joystick(right_stick_direction)
 	
@@ -153,10 +155,8 @@ func _process(delta):
 	
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
 	
-	if(!camera_was_reset):
-		direction = (cam_yaw.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	else:
-		direction = (prev_cam_yaw_basis)
+	direction = (cam_yaw.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
 	
 	if !is_locked && direction:
 		rig.look_at(position + (-direction))
