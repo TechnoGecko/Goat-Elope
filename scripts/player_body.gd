@@ -15,12 +15,14 @@ extends CharacterBody3D
 @export var joystick_sens_vertical = 0.5
 @export var max_camera_angle = 50.0
 @export var min_camera_angle = -33.0
-@export var camera_rotation_speed = 10.0
+@export var camera_rotation_speed = .5
 @onready var cam_yaw = $camera_mount/CamYaw
 @onready var cam_pitch = $camera_mount/CamYaw/CamPitch
 @onready var player_camera = $camera_mount/CamYaw/CamPitch/Camera3D
 var camera_was_reset = false
 var camera_reset_initiated = false
+var camera_rotation_weight = 0.0
+var initial_camera_yaw
 var target_camera_direction
 var input_direction_on_camera_reset
 var prev_cam_yaw_basis
@@ -112,6 +114,10 @@ func rotate_body_joystick(input_direction):
 	
 	cam_yaw.rotate_y(deg_to_rad(-input_direction.x * joystick_sens_horizontal))
 	
+func camera_is_aligned():
+	var range_size = 4
+	print('Camera alignment: ', cam_yaw.rotation.y, ' -- ', deg_to_rad((rig.rotation_degrees.y - 180)))
+	return cam_yaw.rotation.y > deg_to_rad((rig.rotation_degrees.y - 180) - range_size) && cam_yaw.rotation.y < deg_to_rad((rig.rotation_degrees.y - 180) + range_size)
 
 func play_in_air_animation():
 	if velocity.y > 0.0:
@@ -135,22 +141,24 @@ func decay_momentum():
 		momentum = 0.0
 
 func _process(delta):
-	var range_size = 4
 	var input_dir_right = Input.get_vector("right_stick_left", "right_stick_right", "right_stick_up", "right_stick_down")
 	right_stick_direction =  Vector3(input_dir_right.x, input_dir_right.y, 0)
 	
 	if Input.is_action_just_pressed('reset_camera'):
 		target_camera_direction = rig.rotation_degrees.y - 180
 		camera_reset_initiated = true
+		initial_camera_yaw = cam_yaw.rotation_degrees.y
 		prev_cam_yaw_basis = cam_yaw.transform.basis
 		
 	if camera_reset_initiated:
-		print('lerping camera')
-		cam_yaw.rotation_degrees.y = lerp_angle(cam_yaw.rotation_degrees.y, rig.rotation_degrees.y - 180, delta * camera_rotation_speed)
-		if cam_yaw.rotation_degrees.y > (rig.rotation_degrees.y - 180) - range_size && cam_yaw.rotation_degrees.y < (rig.rotation_degrees.y - 180) + range_size:
+		if Input.is_action_pressed('reset_camera'):
+			target_camera_direction = rig.rotation_degrees.y - 180
+		print('lerping camera with weight', delta * camera_rotation_speed)
+		var prev = cam_yaw.rotation_degrees.y
+		cam_yaw.rotation_degrees.y = rad_to_deg(lerp_angle(cam_yaw.rotation.y, deg_to_rad(target_camera_direction), delta * camera_rotation_speed))
+		#if cam_yaw.rotation_degrees.y > (rig.rotation_degrees.y - 180) - range_size && cam_yaw.rotation_degrees.y < (rig.rotation_degrees.y - 180) + range_size:
+		if(cam_yaw.rotation_degrees.y < prev + 1 && cam_yaw.rotation_degrees.y > prev - 1 && !Input.is_action_pressed('reset_camera')):
 			print('detected reset completion:')
-			print('Camera:', cam_yaw.rotation_degrees.y, '--', cam_yaw.rotation.y)
-			print('Rig:', rig.rotation_degrees.y, '--', rig.rotation.y)
 			camera_reset_initiated = false
 			cam_yaw.rotation_degrees.y = rig.rotation_degrees.y - 180
 			if direction:
