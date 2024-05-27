@@ -95,18 +95,6 @@ func rotate_body(event: InputEvent):
 	cam_pitch.rotate_x(deg_to_rad(-event.relative.y * sens_vertical))
 
 func rotate_body_joystick(input_direction):
-	# -----
-	#var camera_basis = transform.basis
-	#var body_basis = rig.transform.basis
-	#var diff = camera_basis.y - body_basis.y;
-	#print('camera.y:')
-	#print(camera_basis)
-	#print('rig .y:')
-	#print(body_basis)
-	#print('diff: ', diff)
-	# -----
-	print('camera pitch degrees:')
-	print(cam_pitch.rotation_degrees)
 	if input_direction.y > 0 && cam_pitch.rotation_degrees.x < max_camera_angle:
 		cam_pitch.rotate_x( deg_to_rad(input_direction.y * joystick_sens_vertical))
 	elif input_direction.y < 0 && cam_pitch.rotation_degrees.x > min_camera_angle:
@@ -114,11 +102,6 @@ func rotate_body_joystick(input_direction):
 	
 	cam_yaw.rotate_y(deg_to_rad(-input_direction.x * joystick_sens_horizontal))
 	
-func camera_is_aligned():
-	var range_size = 4
-	print('Camera alignment: ', cam_yaw.rotation.y, ' -- ', deg_to_rad((rig.rotation_degrees.y - 180)))
-	return cam_yaw.rotation.y > deg_to_rad((rig.rotation_degrees.y - 180) - range_size) && cam_yaw.rotation.y < deg_to_rad((rig.rotation_degrees.y - 180) + range_size)
-
 func play_in_air_animation():
 	if velocity.y > 0.0:
 		if !animation_player.is_playing():
@@ -156,7 +139,6 @@ func _process(delta):
 		print('lerping camera with weight', delta * camera_rotation_speed)
 		var prev = cam_yaw.rotation_degrees.y
 		cam_yaw.rotation_degrees.y = rad_to_deg(lerp_angle(cam_yaw.rotation.y, deg_to_rad(target_camera_direction), delta * camera_rotation_speed))
-		#if cam_yaw.rotation_degrees.y > (rig.rotation_degrees.y - 180) - range_size && cam_yaw.rotation_degrees.y < (rig.rotation_degrees.y - 180) + range_size:
 		if(cam_yaw.rotation_degrees.y < prev + 1 && cam_yaw.rotation_degrees.y > prev - 1 && !Input.is_action_pressed('reset_camera')):
 			print('detected reset completion:')
 			camera_reset_initiated = false
