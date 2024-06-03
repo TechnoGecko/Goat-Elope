@@ -16,19 +16,25 @@ height = 1.87706
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_gxbm1"]
 
-[node name="Mage" node_paths=PackedStringArray("idle_state", "walk_state", "run_state", "jump_state", "fall_state", "attack_state") instance=ExtResource("1_dvilv")]
+[node name="Mage" instance=ExtResource("1_dvilv")]
 script = ExtResource("2_ibjhc")
 sens_horizontal = 0.275
 sens_vertical = 0.215
 joystick_sens_horizontal = 0.9
 joystick_sens_vertical = 0.9
 camera_rotation_speed = 7.5
-idle_state = NodePath("state_machine/idle")
-walk_state = NodePath("state_machine/walk")
-run_state = NodePath("state_machine/run")
-jump_state = NodePath("state_machine/jump")
-fall_state = NodePath("state_machine/fall")
-attack_state = NodePath("state_machine/attack")
+idle_state = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":ExtResource("4_0inu8"),"idle_speed":0.0,"stopping_rate":1.5,"animation_name":"")
+
+walk_state = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":ExtResource("5_56k6s"),"walking_speed":5.0,"animation_name":"")
+
+run_state = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":ExtResource("6_4wnmf"),"running_speed":9.5,"animation_name":"")
+
+jump_state = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":ExtResource("7_iihep"),"jump_height":2.0,"second_jump_height":1.0,"second_jump_variable_height":1.5,"variable_jump_height":3.5,"jump_time_to_peak":0.4,"double_jump_time_to_peak":0.2,"jump_time_to_descent":0.3,"in_air_movement_speed":5.0,"animation_name":"")
+
+fall_state = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":ExtResource("8_cwayc"),"animation_name":"")
+
+attack_state = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":ExtResource("9_mciah"),"animation_name":"")
+
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.939029, 0)

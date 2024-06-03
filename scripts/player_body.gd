@@ -25,6 +25,7 @@ var camera_rotation_weight = 0.0
 var initial_camera_yaw
 var target_camera_direction
 var input_direction_on_camera_reset
+#used for preserving input direction basis on camera reset
 var prev_cam_yaw_basis
 
 
@@ -136,11 +137,9 @@ func _process(delta):
 	if camera_reset_initiated:
 		if Input.is_action_pressed('reset_camera'):
 			target_camera_direction = rig.rotation_degrees.y - 180
-		print('lerping camera with weight', delta * camera_rotation_speed)
 		var prev = cam_yaw.rotation_degrees.y
 		cam_yaw.rotation_degrees.y = rad_to_deg(lerp_angle(cam_yaw.rotation.y, deg_to_rad(target_camera_direction), delta * camera_rotation_speed))
 		if(cam_yaw.rotation_degrees.y < prev + 1 && cam_yaw.rotation_degrees.y > prev - 1 && !Input.is_action_pressed('reset_camera')):
-			print('detected reset completion:')
 			camera_reset_initiated = false
 			cam_yaw.rotation_degrees.y = rig.rotation_degrees.y - 180
 			if direction:
@@ -154,7 +153,8 @@ func _process(delta):
 		is_locked = false
 	
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
-	
+	print("input direction:")
+	print(input_dir)
 	direction = (cam_yaw.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	
