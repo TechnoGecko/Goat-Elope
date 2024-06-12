@@ -1,6 +1,5 @@
-extends State
+extends MovementState
 
-@export var idle_speed = 0.0
 @export var stopping_rate: float = 5.0
 
 const IDLE_ANIMATION = "Idle"

@@ -1,15 +1,6 @@
 class_name State
 extends Node
 
-@export
-var animation_name: String
-
-var parent: PlayerController
-var animation_player: AnimationPlayer
-var input: InputBrain
-var state_machine: StateMachine
-
-var base_gravity: float = ProjectSettings.get_setting('physics/3d/default_gravity')
 var locked = false
 
 func enter():
@@ -27,3 +18,5 @@ func process_physics(_delta):
 func process_frame(_delta):
 	return null
 
+func validate_state_type(state: State):
+	return true

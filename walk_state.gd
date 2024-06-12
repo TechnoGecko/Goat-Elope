@@ -1,4 +1,4 @@
-extends State
+extends MovementState
 
 @export var walking_speed = 7.0
 

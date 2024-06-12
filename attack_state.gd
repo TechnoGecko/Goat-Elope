@@ -1,4 +1,4 @@
-extends State
+extends MovementState
 
 const ATTACK_ANIMATION = "Spellcast_Shoot"
 
