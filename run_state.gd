@@ -1,4 +1,4 @@
-extends State
+extends MovementState
 
 const RUN_ANIMATION = "Running_A"
 

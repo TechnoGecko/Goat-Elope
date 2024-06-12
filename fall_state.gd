@@ -1,4 +1,4 @@
-extends State
+extends MovementState
 
 const FALL_ANIMATION = "Jump_Idle"
 const LAND_ANIMATON = "Jump_Land"

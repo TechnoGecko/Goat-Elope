@@ -1,4 +1,4 @@
-extends State
+extends MovementState
 
 const JUMP_START_ANIMATION = "Jump_Start"
 const JUMP_IDLE_ANIMATION = "Jump_Idle"

@@ -4,8 +4,8 @@ extends CharacterBody3D
 @onready var camera_mount = $camera_mount
 @onready var animation_player = $AnimationPlayer
 @onready var rig = $Rig
-@onready var state_machine = $state_machine
-@onready var input_brain = $InputBrain
+@onready var movement_state_machine = $movement_state_machine
+@onready var input_brain = $input_brain
 
 @export var momentum_decay_rate: float = 0.1
 
@@ -16,10 +16,12 @@ extends CharacterBody3D
 @export var max_camera_angle = 50.0
 @export var min_camera_angle = -33.0
 @export var camera_rotation_speed = .5
+@export var camera_snap_speed = .05
 @onready var cam_yaw = $camera_mount/CamYaw
 @onready var cam_pitch = $camera_mount/CamYaw/CamPitch
-@onready var player_camera = $camera_mount/CamYaw/CamPitch/Camera3D
+@onready var player_camera = $camera_mount/CamYaw/CamPitch/SpringArm3D/Camera3D
 var camera_was_reset = false
+var right_stick_direction
 var camera_reset_initiated = false
 var camera_rotation_weight = 0.0
 var initial_camera_yaw
@@ -50,19 +52,14 @@ var allow_movement = true
 var is_jumping = false
 
 var direction
-var right_stick_direction
 var override_right_stick = false
 var momentum = 0.0
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	state_machine.init(self, animation_player, input_brain)
+	movement_state_machine.init(self, animation_player)
 	
-func _input(event):
-	if event is InputEventMouseMotion:
-		rotate_body(event)
-		
-	state_machine.process_input(event)
+
 	
 func jump_pressed():
 	if Input.is_action_pressed("jump"):
@@ -95,7 +92,7 @@ func rotate_body(event: InputEvent):
 	#rig.rotate_y(deg_to_rad(event.relative.x * sens_horizontal))
 	cam_pitch.rotate_x(deg_to_rad(-event.relative.y * sens_vertical))
 
-func rotate_body_joystick(input_direction):
+func rotate_camera(input_direction):
 	if input_direction.y > 0 && cam_pitch.rotation_degrees.x < max_camera_angle:
 		cam_pitch.rotate_x( deg_to_rad(input_direction.y * joystick_sens_vertical))
 	elif input_direction.y < 0 && cam_pitch.rotation_degrees.x > min_camera_angle:
@@ -125,37 +122,22 @@ func decay_momentum():
 		momentum = 0.0
 
 func _process(delta):
-	var input_dir_right = Input.get_vector("right_stick_left", "right_stick_right", "right_stick_up", "right_stick_down")
-	right_stick_direction =  Vector3(input_dir_right.x, input_dir_right.y, 0)
+	#var input_dir_right = Input.get_vector("right_stick_left", "right_stick_right", "right_stick_up", "right_stick_down")
+	right_stick_direction =  input_brain.right_stick_direction
 	
-	if Input.is_action_just_pressed('reset_camera'):
-		target_camera_direction = rig.rotation_degrees.y - 180
-		camera_reset_initiated = true
-		initial_camera_yaw = cam_yaw.rotation_degrees.y
-		prev_cam_yaw_basis = cam_yaw.transform.basis
-		
-	if camera_reset_initiated:
-		if Input.is_action_pressed('reset_camera'):
-			target_camera_direction = rig.rotation_degrees.y - 180
-		var prev = cam_yaw.rotation_degrees.y
-		cam_yaw.rotation_degrees.y = rad_to_deg(lerp_angle(cam_yaw.rotation.y, deg_to_rad(target_camera_direction), delta * camera_rotation_speed))
-		if(cam_yaw.rotation_degrees.y < prev + 1 && cam_yaw.rotation_degrees.y > prev - 1 && !Input.is_action_pressed('reset_camera')):
-			camera_reset_initiated = false
-			cam_yaw.rotation_degrees.y = rig.rotation_degrees.y - 180
-			if direction:
-				camera_was_reset = true
-				input_direction_on_camera_reset = direction
-		
+	
+	
 	if right_stick_direction && !override_right_stick:
-		rotate_body_joystick(right_stick_direction)
+		rotate_camera(right_stick_direction)
 	
 	if !animation_player.is_playing():
 		is_locked = false
 	
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
-	print("input direction:")
-	print(input_dir)
-	direction = (cam_yaw.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if input_dir != Vector2(0.0, 0.0):
+		print("input direction:")
+		print(input_dir)
+	direction = input_brain.movement_input_dir
 	
 	
 	if !is_locked && direction:
@@ -164,18 +146,18 @@ func _process(delta):
 	if is_on_floor():
 		if !is_locked:
 			if jump_just_pressed():
-				state_machine.try_change_state(jump_state)
+				movement_state_machine.try_change_state(jump_state)
 			elif direction:
 				if animation_player.current_animation != 'Jump_Land':
 					if run_pressed():
-						state_machine.try_change_state(run_state)
+						movement_state_machine.try_change_state(run_state)
 					else:
-						state_machine.try_change_state(walk_state)
+						movement_state_machine.try_change_state(walk_state)
 			else:
 				
-				state_machine.try_change_state(idle_state)
+				movement_state_machine.try_change_state(idle_state)
 	else:
-		state_machine.try_change_state(jump_state) 
+		movement_state_machine.try_change_state(jump_state) 
 			
 	if !is_locked:
 		move_and_slide()
