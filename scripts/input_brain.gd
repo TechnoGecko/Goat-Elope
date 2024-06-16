@@ -6,6 +6,7 @@ extends Node
 
 @export var movement_input_dir = Vector2(0.0, 0.0)
 @export var right_stick_direction = Vector2(0.0, 0.0)
+@export var d_pad_direction = Vector2(0.0, 0.0)
 @export var input_dir = Vector3(0.0, 0.0, 0.0)
 @export var d_pad_dir = Vector2(0.0, 0.0)
 # Called when the node enters the scene tree for the first time.
@@ -23,7 +24,7 @@ func set_input_directions():
 	right_stick_direction =  Vector3(input_dir_right.x, input_dir_right.y, 0)
 	
 	var input_d_pad = Input.get_vector("d_pad_left", "d_pad_right", "d_pad_up", "d_pad_down")
-	
+	d_pad_direction = Vector3(input_d_pad.x, input_d_pad.y, 0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

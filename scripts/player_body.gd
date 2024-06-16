@@ -125,11 +125,6 @@ func _process(delta):
 	#var input_dir_right = Input.get_vector("right_stick_left", "right_stick_right", "right_stick_up", "right_stick_down")
 	right_stick_direction =  input_brain.right_stick_direction
 	
-	
-	
-	if right_stick_direction && !override_right_stick:
-		rotate_camera(right_stick_direction)
-	
 	if !animation_player.is_playing():
 		is_locked = false
 	

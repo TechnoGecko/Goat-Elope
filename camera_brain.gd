@@ -4,6 +4,7 @@ extends Node3D
 @export var camera_rotation_speed = .5
 @export var camera_snap_speed = .05
 @onready var input_brain = $"../input_brain"
+@onready var player = $".."
 
 var camera_was_reset = false
 var camera_reset_initiated = false
@@ -22,12 +23,8 @@ var input_dir
 
 func _process(delta):
 	
-	input_dir = Input.get_vector("left", "right", "forward", "backward")
-	if input_dir != Vector2(0.0, 0.0):
-		print("input direction:")
-		print(input_dir)
-	#direction = (cam_yaw.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	direction = input_brain.movement_input_dir
+	if input_brain.d_pad_direction:
+		player.rotate_camera(input_brain.d_pad_direction)
 	
 	if Input.is_action_just_pressed('reset_camera'):
 		target_camera_direction = rig.rotation_degrees.y - 180
