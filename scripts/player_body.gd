@@ -120,6 +120,9 @@ func decay_momentum():
 		momentum = momentum * momentum_decay_rate
 	else:
 		momentum = 0.0
+		
+func manage_movement_state():
+	
 
 func _process(delta):
 	#var input_dir_right = Input.get_vector("right_stick_left", "right_stick_right", "right_stick_up", "right_stick_down")

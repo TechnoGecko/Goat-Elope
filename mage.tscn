@@ -19,10 +19,13 @@ height = 1.87706
 
 [node name="Mage" node_paths=PackedStringArray("idle_state", "walk_state", "run_state", "jump_state", "fall_state", "attack_state") instance=ExtResource("1_dvilv")]
 script = ExtResource("2_ibjhc")
+momentum_decay_rate = null
 sens_horizontal = 0.275
 sens_vertical = 0.215
 joystick_sens_horizontal = 0.9
 joystick_sens_vertical = 0.9
+max_camera_angle = null
+min_camera_angle = null
 camera_rotation_speed = 7.5
 camera_snap_speed = 12.0
 idle_state = NodePath("movement_state_machine/idle")
